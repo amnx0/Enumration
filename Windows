@@ -1,0 +1,25 @@
+Host Discovery:-
+fping -agq 10.211.11.0/24
+nmap -sn 10.211.11.0/24
+
+Enumration:-
+nmap -p 88,135,139,389,445 -sV -sC -iL hosts.txt
+nmap -sS -p- -T3 -iL hosts.txt -oN full_port_scan.txt
+
+SMB:-
+nmap -p445 --script smb-enum-shares 10.211.11.10
+smbclient -L //TARGET_IP -N
+smbclient //10.211.11.10/SharedFiles -N
+
+Domain Enumeration:- 
+ldapsearch -x -H ldap://10.211.11.10 -s base
+ldapsearch -x -H ldap://10.211.11.10 -b "dc=tryhackme,dc=loc" "(objectClass=person)" 
+
+enum4linux-ng -A 10.211.11.10 -oA results.txt
+rpcclient -U "" 10.211.11.10 -N
+  > enumdomusers
+  If enumdomusers is restricted
+for i in $(seq 500 2000); do echo "queryuser $i" |rpcclient -U "" -N 10.211.11.10 2>/dev/null | grep -i "User Name"; done
+
+Username Enumeration With Kerbrute:-
+./kerbrute userenum --dc 10.211.11.10 -d tryhackme.loc users.txt
