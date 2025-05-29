@@ -10,6 +10,7 @@ SMB:-
 nmap -p445 --script smb-enum-shares 10.211.11.10
 smbclient -L //TARGET_IP -N
 smbclient //10.211.11.10/SharedFiles -N
+nxc smb 10.10.10.10 -u j.fleischman -d fluffy.htb -p 'J0elTHEM4n1990!' --shares
 
 Domain Enumeration:- 
 ldapsearch -x -H ldap://10.211.11.10 -s base
